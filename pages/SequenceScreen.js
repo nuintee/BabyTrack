@@ -28,7 +28,7 @@ const SequenceScreen = ({ navigation }, props) => {
             setProgress(progress + 1)
         }
         else {
-            setProgress(len - 2)
+            navigation.navigate('home')
         }
     }
 

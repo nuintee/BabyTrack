@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, Image } from 'react-native'
 import { TextInput, TouchableOpacity, ActivityIndicator } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
@@ -50,7 +50,8 @@ const LoginScreen = ({ navigation },props) => {
         },
         actionButtonText:{
             fontWeight: 'bold',
-            color: '#FFF'
+            color: '#FFF',
+            fontSize: 16
         },
         pageTitle:{
             fontWeight: 'bold',
@@ -85,17 +86,22 @@ const LoginScreen = ({ navigation },props) => {
             alert('ログイン成功')
         })
         .catch(error => {
-            alert('Error! ' + error)
+            var errorCode = error.code;
+            var errorMessage = error.message;
         })
     }
 
     return(
         <View style = {styles.container}>
+            <Image 
+                source = { require('../assets/babytrack.png')}
+                style = { { position : 'absolute', top: 15 + '%'} }
+            />
             <View style = {styles.form}>
                 <Text style = {styles.pageTitle}>ログイン</Text>
                 <View style = {styles.inputGroup}>
-                    <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)}></TextInput>
-                    <TextInput style = {styles.textInput} placeholder = 'パスワード' secureTextEntry = {true} onChangeText = {(input) => setPasswordText(input)}></TextInput>
+                    <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)} autoCapitalize='none' ></TextInput>
+                    <TextInput style = {styles.textInput} placeholder = 'パスワード' secureTextEntry = {true} onChangeText = {(input) => setPasswordText(input)} autoCapitalize='none'></TextInput>
                 </View>
                 <TouchableOpacity style = {styles.actionButton} onPress = {pressHandle}>
                     <Text style = {styles.actionButtonText}>ログイン</Text>

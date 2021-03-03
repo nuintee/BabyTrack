@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import firebase from './firebase'
 import LoginScreen from './pages/LoginScreen'
 import HomeScreen from './pages/HomeScreen'
+import AuthScreen from './pages/AuthScreen'
 import DataScreen from './pages/DataScreen'
 import SignupScreen from './pages/SignupScreen'
 import SequenceScreen from './pages/SequenceScreen'
@@ -17,6 +18,7 @@ const Stack = createStackNavigator()
 export default function App({navigation}){
 
   let [ isLogged, setIsLogged ] = useState(false)
+  let [ isDone, setIsDone ] = useState(false)
 
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -31,13 +33,12 @@ export default function App({navigation}){
       <Stack.Navigator>
         { isLogged ? (
           <>
-            <Stack.Screen name = 'sequence' component = { SequenceScreen } options = {{title: 'BabyTrack'}}/>
-            <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム'}}/>
+            <Stack.Screen name = 'sequence'  component = {SequenceScreen} />
           </>
         ) : (
           <>
-          <Stack.Screen name = 'signup' component = { SignupScreen } options = {{title: '登録'}}/>
-          <Stack.Screen name = 'login' component = { LoginScreen } options = {{title: 'ログイン'}}/>
+          <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}}/>
+          <Stack.Screen name = 'auth' component = { AuthScreen } options = {{ headerShown: false }}/>
           </>
         )}
       </Stack.Navigator>

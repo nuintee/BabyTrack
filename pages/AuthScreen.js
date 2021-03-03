@@ -1,18 +1,29 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, Image } from 'react-native'
-import { TextInput, TouchableOpacity} from 'react-native-gesture-handler'
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
 
+const AuthScreen = ({ navigation }) => {
 
-const SignupScreen = ({navigation}, props) => {
-
-    let { title, theme} = props
-
+    let [ page, setPage ] = useState(0)
     let [ emailText, setEmailText ] = useState();
     let [ passwordText, setPasswordText ] = useState();
 
-    title == 'signup' ?  theme = 'purple' : theme = 'green'
+    const pages = [ 
+        { 
+            title : '登録',
+            color: '#CCABDA',
+            desc: 'アカウントを持っている場合',
+            link: 'ログイン'
+        },
+        {
+            title : 'ログイン',
+            color: '#86E3CE',
+            desc: 'アカウントを持っていない場合',
+            link: '登録'
+        }
+    ]
 
     // Height
     const h = 55
@@ -20,11 +31,6 @@ const SignupScreen = ({navigation}, props) => {
     const w = 275
     // BorderRadius
     const br = 20
-
-    const colors = {
-        green: '#86E3CE',
-        purple: '#CCABDA'
-    }
 
     const styles = StyleSheet.create({
         container:{
@@ -45,13 +51,14 @@ const SignupScreen = ({navigation}, props) => {
             borderRadius: br,
             height: h,
             width: w,
-            backgroundColor: colors[theme],
+            backgroundColor: pages[page].color
             /* Shadow */
 
         },
         actionButtonText:{
             fontWeight: 'bold',
-            color: '#FFF'
+            color: '#FFF',
+            fontSize: 16
         },
         pageTitle:{
             fontWeight: 'bold',
@@ -75,20 +82,24 @@ const SignupScreen = ({navigation}, props) => {
         },
         linkText:{
             marginLeft: 10,
-            color: colors[theme],
+            color: pages[page].color,
             fontWeight: 'bold'
         }
     })
 
     let pressHandle = () => {
-        firebase.auth().createUserWithEmailAndPassword(emailText,passwordText)
+        firebase.auth().signInWithEmailAndPassword(emailText,passwordText)
         .then(user => {
-            alert('登録完了！')
-            navigation.navigate('login')
+            alert('ログイン成功')
         })
         .catch(error => {
-            alert('Error! ' + error)
+            var errorCode = error.code;
+            var errorMessage = error.message;
         })
+    }
+
+    const pagination = () => {
+        page == 0 ? setPage(1) : setPage(0)
     }
 
     return(
@@ -98,23 +109,23 @@ const SignupScreen = ({navigation}, props) => {
                 style = { { position : 'absolute', top: 15 + '%'} }
             />
             <View style = {styles.form}>
-                <Text style = {styles.pageTitle}>登録</Text>
+                <Text style = {styles.pageTitle}>{pages[page].title}</Text>
                 <View style = {styles.inputGroup}>
-                    <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)} autoCapitalize='none'></TextInput>
+                    <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)} autoCapitalize='none' ></TextInput>
                     <TextInput style = {styles.textInput} placeholder = 'パスワード' secureTextEntry = {true} onChangeText = {(input) => setPasswordText(input)} autoCapitalize='none'></TextInput>
                 </View>
                 <TouchableOpacity style = {styles.actionButton} onPress = {pressHandle}>
-                    <Text style = {styles.actionButtonText}>登録</Text>
+                    <Text style = {styles.actionButtonText}>{pages[page].title}</Text>
                 </TouchableOpacity>
             </View>
             <View style = {styles.linkGroup}>
-                <Text>アカウントを持っている場合</Text>
-                <TouchableOpacity  onPress = {() => navigation.navigate('login')}>
-                    <Text style = {styles.linkText}>ログイン</Text>
+                <Text>{pages[page].desc}</Text>
+                <TouchableOpacity  onPress = { pagination }>
+                    <Text style = {styles.linkText}>{pages[page].link}</Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
 }
 
-export default SignupScreen
+export default AuthScreen
