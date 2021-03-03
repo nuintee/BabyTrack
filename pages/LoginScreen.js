@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { TextInput, TouchableOpacity, ActivityIndicator } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
 
@@ -54,7 +54,8 @@ const LoginScreen = ({ navigation },props) => {
         },
         pageTitle:{
             fontWeight: 'bold',
-            fontSize: 30
+            fontSize: 30,
+            color: '#919191'
         },
         textInput:{
             borderRadius: br,
@@ -82,7 +83,6 @@ const LoginScreen = ({ navigation },props) => {
         firebase.auth().signInWithEmailAndPassword(emailText,passwordText)
         .then(user => {
             alert('ログイン成功')
-            navigation.navigate('home')
         })
         .catch(error => {
             alert('Error! ' + error)

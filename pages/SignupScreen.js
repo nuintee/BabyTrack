@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { TextInput, TouchableOpacity, Image } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
+
 
 const SignupScreen = ({navigation}, props) => {
 
@@ -54,7 +55,8 @@ const SignupScreen = ({navigation}, props) => {
         },
         pageTitle:{
             fontWeight: 'bold',
-            fontSize: 30
+            fontSize: 30,
+            color: '#919191'
         },
         textInput:{
             borderRadius: br,
