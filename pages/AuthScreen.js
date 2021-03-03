@@ -145,7 +145,7 @@ const AuthScreen = ({ navigation }) => {
                     <Text style = {styles.actionButtonText}>{pages[page].title}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style = {styles.resetLink}>
+                <TouchableOpacity style = {styles.resetLink} onPress = { () => navigation.navigate('reset')}>
                     <Text style = {styles.helperText}>{pages[page].reset}</Text>
                 </TouchableOpacity>
 
