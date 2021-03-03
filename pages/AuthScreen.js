@@ -104,7 +104,6 @@ const AuthScreen = ({ navigation }) => {
             firebase.auth().createUserWithEmailAndPassword(emailText,passwordText)
             .then(user => {
                 alert('登録完了！')
-                navigation.navigate('login')
             })
             .catch(error => {
                 alert('Error! ' + error)

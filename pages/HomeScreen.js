@@ -17,7 +17,6 @@ const HomeScreen = ({ navigation }) => {
         firebase.auth().signOut()
         .then(() => {
             alert('ログアウトしました。')
-            navigation.navigate('auth')
         })
         .catch((error) => {
             alert('エラーが起こりました。')

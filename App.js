@@ -32,10 +32,10 @@ export default function App({navigation}){
         { isLogged ? (
           <>
             <Stack.Screen name = 'sequence'  component = {SequenceScreen} />
+            <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}}/>
           </>
         ) : (
           <>
-          <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}}/>
           <Stack.Screen name = 'auth' component = { AuthScreen } options = {{ headerShown: false }}/>
           </>
         )}
