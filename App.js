@@ -5,11 +5,9 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import firebase from './firebase'
-import LoginScreen from './pages/LoginScreen'
 import HomeScreen from './pages/HomeScreen'
 import AuthScreen from './pages/AuthScreen'
 import DataScreen from './pages/DataScreen'
-import SignupScreen from './pages/SignupScreen'
 import SequenceScreen from './pages/SequenceScreen'
 import SettingsScreen from './pages/SettingsScreen'
 
