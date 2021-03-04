@@ -57,8 +57,12 @@ const PasswordResetScreen = ({ navigation }) => {
             marginVertical: 5
         },
         helperText:{
-            color: '#919191'
-        }
+            color: '#919191',
+            marginTop: 15
+        },
+        inputGroup:{
+            marginVertical: 20
+        },
     })
 
     let pressHandle = () => {
@@ -80,7 +84,9 @@ const PasswordResetScreen = ({ navigation }) => {
                 <Text style = {styles.pageTitle}>パスワード再設定</Text>
                 <Text style = {styles.helperText}>以下に再設定リンクをお送りいたします。</Text>
 
-                <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)} autoCapitalize='none' ></TextInput>
+                <View style = {styles.inputGroup}>
+                    <TextInput style = {styles.textInput} placeholder = 'メールアドレス' onChangeText = {(input) => setEmailText(input)} autoCapitalize='none' ></TextInput>
+                </View>
 
                 <TouchableOpacity style = {styles.actionButton} onPress = {pressHandle}>
                     <Text style = {styles.actionButtonText}>リンク送信</Text>
