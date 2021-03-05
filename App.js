@@ -9,7 +9,9 @@ import HomeScreen from './pages/HomeScreen'
 import AuthScreen from './pages/AuthScreen'
 import PasswordResetScreen from './pages/PasswordResetScreen'
 import DataScreen from './pages/DataScreen'
-import SequenceScreen from './pages/SequenceScreen'
+import UserScreen from './pages/UserScreen'
+import ChildScreen from './pages/ChildScreen'
+import LoadingScreen from './pages/LoadingScreen'
 import SettingsScreen from './pages/SettingsScreen'
 
 const Stack = createStackNavigator()
@@ -32,8 +34,10 @@ export default function App({navigation}){
       <Stack.Navigator>
         { isLogged ? (
           <>
-            <Stack.Screen name = 'sequence'  component = {SequenceScreen}  options = {{title: '情報登録'}}/>
+            <Stack.Screen name = 'user'  component = {UserScreen}  options = {{title: 'ユーザー名'}}/>
             <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}}/>
+            <Stack.Screen name = 'child'  component = {ChildScreen}  options = {{title: '子供の名前'}}/>
+            <Stack.Screen name = 'load' component = {LoadingScreen} options = {{ headerShown: false }}/>
           </>
         ) : (
           <>

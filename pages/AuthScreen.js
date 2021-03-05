@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image, Alert } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
@@ -103,7 +103,7 @@ const AuthScreen = ({ navigation }) => {
         if (page == 0){
             firebase.auth().createUserWithEmailAndPassword(emailText,passwordText)
             .then(user => {
-                alert('登録完了！')
+                Alert.alert('アカウント登録','登録完了！')
             })
             .catch(error => {
                 alert('Error! ' + error)
@@ -129,10 +129,10 @@ const AuthScreen = ({ navigation }) => {
     return(
         <>
         <View style = {styles.container}>
-            <Image 
+            {/* <Image 
                 source = { require('../assets/babytrack.png')}
                 style = { { position : 'absolute', top: 15 + '%'} }
-            />
+            /> */}
             <View style = {styles.form}>
                 <Text style = {styles.pageTitle}>{pages[page].title}</Text>
 

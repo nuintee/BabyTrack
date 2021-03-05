@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image, Alert } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 
 import firebase from '../firebase'
@@ -67,7 +67,7 @@ const PasswordResetScreen = ({ navigation }) => {
 
     let pressHandle = () => {
         firebase.auth().sendPasswordResetEmail(emailText).then(() => {
-            alert('メールが送信されました。')
+            Alert.alert('パスワードリセット', 'メールを送信致しました。')
           }).catch((error) => {
             alert('エラーがおきました。')
         });
@@ -76,10 +76,10 @@ const PasswordResetScreen = ({ navigation }) => {
     return(
         <>
         <View style = {styles.container}>
-            <Image 
+            {/* <Image 
                 source = { require('../assets/babytrack.png')}
                 style = { { position : 'absolute', top: 15 + '%'} }
-            />
+            /> */}
             <View style = {styles.form}>
                 <Text style = {styles.pageTitle}>パスワード再設定</Text>
                 <Text style = {styles.helperText}>以下に再設定リンクをお送りいたします。</Text>
