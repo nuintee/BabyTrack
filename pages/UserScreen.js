@@ -5,7 +5,6 @@ import { set } from 'react-native-reanimated'
 import firebase from '../firebase'
 
 const UserScreen = ({ navigation }, props) => {
-    let [ progress, setProgress ] = useState(0);
     let [ userName, setUserName ] = useState();
 
     // Height

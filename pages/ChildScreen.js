@@ -5,7 +5,6 @@ import { set } from 'react-native-reanimated'
 import firebase from '../firebase'
 
 const ChildScreen = ({ route, navigation }) => {
-    let [ progress, setProgress ] = useState(0);
     let [ childName, setChildName ] = useState();
 
     let { userName } = route.params;
