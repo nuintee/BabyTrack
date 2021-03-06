@@ -6,6 +6,9 @@ import firebase from '../firebase'
 const HomeScreen = ({ navigation }) => {
 
     let [ childrenData, setChildrenData ] = useState();
+    let [ currentChild, setCurrentChild ] = useState(0);
+
+    const colorOption = currentChild ? 'blue' : 'red'
 
     // Height
     const h = 55
@@ -75,15 +78,19 @@ const HomeScreen = ({ navigation }) => {
         },
         carouselContainer:{
             display:'flex',
+            flexGrow:0,
+            width:100+'%',
             flexDirection:'row',
-            backgroundColor: 'green',
-
         },
         carousel_button:{
-            backgroundColor:'#FFF',
-            height:100,
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            backgroundColor: colorOption,
+            height:50,
             width: 100,
-            margin: 10
+            margin: 10,
+            borderRadius:20
         }
     })
 
@@ -139,26 +146,23 @@ const HomeScreen = ({ navigation }) => {
     return(
         <View style = {styles.container}>
             {childrenData != null ? (
-                // <View style  = {styles.carouselContainer}>
-                //     {Object.keys(childrenData.children).map(key => (
-                //         <TouchableOpacity style = {styles.carousel_button} key = {key}>
-                //             <Text>{childrenData.children[key]}</Text>
-                //         </TouchableOpacity>
-                //     ))}
-                // </View>
-                <FlatList 
-                    data = { [childrenData] }
-                    renderItem = {({item}) => {
-                        return(
-                            Object.keys(item.children).map(key => (
-                            <TouchableOpacity key = {key}>
-                                <Text>{item.children[key]}</Text>
-                            </TouchableOpacity>
-                            ))
-                        )
-                    } }
-                    keyExtractor = {(item,index) => index.toString()}
-                />
+                <View style = {styles.carouselContainer}>
+                    <FlatList 
+                        data = { [childrenData] }
+                        renderItem = {({item}) => {
+                            return(
+                                    Object.keys(item.children).map((key,index) => (
+                                    <TouchableOpacity key = {key} index = {index} style = {styles.carousel_button} onPress = {() => setCurrentChild(index)}>
+                                        <Text>{item.children[key]}</Text>
+                                    </TouchableOpacity>
+                                ))
+                            )
+                        } }
+                        horizontal
+                        keyExtractor = {(item,index) => index.toString()}
+                        scrollEnabled = {true}
+                    />
+                </View>
             ) : (
                 // 子供がまだいない場合
                 <Text>設定からお子様を登録しましょう。</Text>
