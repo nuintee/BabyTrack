@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, Children } from 'react'
 import { Text, View, StyleSheet} from 'react-native'
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from '../firebase'
@@ -7,8 +7,7 @@ const HomeScreen = ({ navigation }) => {
 
     let [ childrenData, setChildrenData ] = useState();
     let [ currentChild, setCurrentChild ] = useState(0);
-
-    const colorOption = currentChild ? 'blue' : 'red'
+    const flatlist = useRef();
 
     // Height
     const h = 55
@@ -82,16 +81,6 @@ const HomeScreen = ({ navigation }) => {
             width:100+'%',
             flexDirection:'row',
         },
-        carousel_button:{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center',
-            backgroundColor: colorOption,
-            height:50,
-            width: 100,
-            margin: 10,
-            borderRadius:20
-        }
     })
 
     const pressHandle = () => {
@@ -148,12 +137,32 @@ const HomeScreen = ({ navigation }) => {
             {childrenData != null ? (
                 <View style = {styles.carouselContainer}>
                     <FlatList 
+                        ref = {flatlist}
                         data = { [childrenData] }
                         renderItem = {({item}) => {
                             return(
                                     Object.keys(item.children).map((key,index) => (
-                                    <TouchableOpacity key = {key} index = {index} style = {styles.carousel_button} onPress = {() => setCurrentChild(index)}>
+                                    <TouchableOpacity key = {key} index = {index} 
+
+                                        style = {
+                                            {
+                                                display:'flex',
+                                                justifyContent:'center',
+                                                alignItems:'center',
+                                                backgroundColor: index == currentChild ? 'red': 'blue',
+                                                height:50,
+                                                width: 100,
+                                                margin: 10,
+                                                borderRadius:20
+                                            }
+                                        } 
+
+                                        onPress = {(item) => {
+                                            setCurrentChild(index)
+                                        }}>
+
                                         <Text>{item.children[key]}</Text>
+
                                     </TouchableOpacity>
                                 ))
                             )
