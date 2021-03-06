@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet} from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
@@ -115,16 +115,28 @@ const HomeScreen = ({ navigation }) => {
         )
     }
 
-    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid)
-    .onSnapshot((doc) => {
-        setChildrenData([doc.data().children])
-    })
+    useEffect(() => {
+        const unsubscribe = firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid)
+        .onSnapshot((snap) => {
+            const data = snap.data()
+            setChildrenData(data)
+        })
+
+        return () => unsubscribe();
+    }, [])
+
+
 
     return(
         <View style = {styles.container}>
             {childrenData != null ? (
-                <>
-                </>
+                <View>
+                    {Object.keys(childrenData.children).map(key => (
+                        <TouchableOpacity>
+                            <Text>{childrenData.children[key]}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             ) : (
                 // 子供がまだいない場合
                 <Text>設定からお子様を登録しましょう。</Text>
