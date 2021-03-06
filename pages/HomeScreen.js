@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet} from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
@@ -73,6 +72,18 @@ const HomeScreen = ({ navigation }) => {
         },
         whiteText:{
             color: '#FFF'
+        },
+        carouselContainer:{
+            display:'flex',
+            flexDirection:'row',
+            backgroundColor: 'green',
+
+        },
+        carousel_button:{
+            backgroundColor:'#FFF',
+            height:100,
+            width: 100,
+            margin: 10
         }
     })
 
@@ -125,18 +136,29 @@ const HomeScreen = ({ navigation }) => {
         return () => unsubscribe();
     }, [])
 
-
-
     return(
         <View style = {styles.container}>
             {childrenData != null ? (
-                <View>
-                    {Object.keys(childrenData.children).map(key => (
-                        <TouchableOpacity>
-                            <Text>{childrenData.children[key]}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                // <View style  = {styles.carouselContainer}>
+                //     {Object.keys(childrenData.children).map(key => (
+                //         <TouchableOpacity style = {styles.carousel_button} key = {key}>
+                //             <Text>{childrenData.children[key]}</Text>
+                //         </TouchableOpacity>
+                //     ))}
+                // </View>
+                <FlatList 
+                    data = { [childrenData] }
+                    renderItem = {({item}) => {
+                        return(
+                            Object.keys(item.children).map(key => (
+                            <TouchableOpacity key = {key}>
+                                <Text>{item.children[key]}</Text>
+                            </TouchableOpacity>
+                            ))
+                        )
+                    } }
+                    keyExtractor = {(item,index) => index.toString()}
+                />
             ) : (
                 // 子供がまだいない場合
                 <Text>設定からお子様を登録しましょう。</Text>
