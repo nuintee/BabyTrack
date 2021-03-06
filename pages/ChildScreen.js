@@ -6,9 +6,6 @@ import firebase from '../firebase'
 
 const ChildScreen = ({ route, navigation }) => {
     let [ childName, setChildName ] = useState();
-
-    let { userName } = route.params;
-
     
     // Height
     const h = 55
@@ -61,21 +58,46 @@ const ChildScreen = ({ route, navigation }) => {
     })
 
     const pressHandle = () => {
+
         if (childName != null){
-            firebase.firestore().collection('User').add({
-                children:[
-                    childName
-                ],
-                email: 'shosho@gmail.com',
-                parents:[
-                    userName
-                ]
-            })
-            .then((ref) => {
-                navigation.navigate('home',{ dataID: ref.id })
+            firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).get({})
+            .then((doc) => {
+                if (doc.data()){
+                    // Creating Auto Incremented ID -->
+                    let len = Object.keys(doc.data().children).length
+                    let lastData = Object.keys(doc.data().children)[len - 1]
+                    let lastIndex = lastData.match(/\d/g).pop()
+                    let nextIndex = Number(lastIndex) + 1
+                    // <--
+
+                    // If there is userdata already => Update
+                    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).update({
+                        [`children.user_${nextIndex}`]: childName
+                    })
+                    .then(() => {
+                        alert('更新しました！')
+                        navigation.navigate('home')
+                    })
+                    .catch(err => {
+                        alert(err)
+                    })
+                }
+                else{
+                    // If there is no userdata yet => Add
+                    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).set({
+                        'children.user_0': childName,
+                        email: firebase.auth().currentUser.email
+                    })
+                    .then(() => {
+                        alert('追加しました!')
+                    })
+                    .catch(err => {
+                        alert(err)
+                    })
+                }
             })
             .catch((err) => {
-                alert(error);
+                alert(err)
             })
         }
     }

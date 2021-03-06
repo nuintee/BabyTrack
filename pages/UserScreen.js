@@ -1,3 +1,4 @@
+import { auth, firestore } from 'firebase'
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -58,7 +59,43 @@ const UserScreen = ({ navigation }, props) => {
     })
 
     const pressHandle = () => {
-        userName != null ? navigation.navigate('child',{userName: userName}) : null
+
+        const documentRef = "collection('User').doc(firebase.auth().currentUser.uid)";
+        if (userName != null){
+            firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).get({})
+            .then((doc) => {
+                if (doc.data()){
+                    // If there is userdata already => Update
+                    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).update({
+                        owner: userName
+                    })
+                    .then(() => {
+                        alert('更新しました！')
+                        navigation.navigate('child')
+                    })
+                    .catch(err => {
+                        alert(err)
+                    })
+                }
+                else{
+                    // If there is no userdata yet => Add
+                    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).set({
+                        owner: userName,
+                        email: firebase.auth().currentUser.email
+                    })
+                    .then(() => {
+                        alert('追加しました!')
+                    })
+                    .catch(err => {
+                        alert(err)
+                    })
+                }
+            })
+            .catch((err) => {
+                alert(err)
+            })
+        }
+
     }
 
     return(

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet} from 'react-native'
+import DropDownPicker from 'react-native-dropdown-picker'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from '../firebase'
 
-const HomeScreen = ({ route, navigation }) => {
-    const { dataID } = route.params;
+const HomeScreen = ({ navigation }) => {
 
+    let [ childrenData, setChildrenData ] = useState();
 
     // Height
     const h = 55
@@ -27,7 +28,8 @@ const HomeScreen = ({ route, navigation }) => {
             width: 80 + '%',
             backgroundColor: '#FFF',
             borderRadius: 20,
-            padding:20
+            padding:20,
+            marginTop: 10
         },
         card_displayGroup:{
             display:'flex',
@@ -43,7 +45,7 @@ const HomeScreen = ({ route, navigation }) => {
             borderRadius: br,
             height: h,
             width: w,
-            backgroundColor: '#86E3CE'
+            backgroundColor: '#86E3CE',
             /* Shadow */
         },
         actionButtonText:{
@@ -84,39 +86,55 @@ const HomeScreen = ({ route, navigation }) => {
         })
     }
 
-    const Card = () => {
-        return(
-            <View style = {styles.card}>
+    const Card = (props) => {
+        let { name, color } = props;
 
+        name == 'ミルク' ? color = '#86E3CE' : color = 'purple'
+
+        return(
+            <>
+            <View style = {styles.card}>
                 <View　style = {styles.card_displayGroup}>
-                    <Text>ミルク</Text>
+                    <Text>{name}</Text>
                     
                     <View style = {styles.card_displayCupsule}>
                         <Text style = {styles.whiteText}>46分前</Text>
                     </View>
-
                 </View>
 
                 <View style = {styles.inputGroup}>
-                    <TextInput style = {styles.actionTextInput} placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput>
+                    {/* <TextInput style = {styles.actionTextInput} placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput> */}
+
                 </View>
 
-                <TouchableOpacity style = {styles.actionButton}>
-                    <Text style = {styles.actionButtonText}>ミルク</Text>
+                <TouchableOpacity style = {styles.actionButton} onPress = {() => setInit(init + 1)}>
+                    <Text style = {styles.actionButtonText}>{name}</Text>
                 </TouchableOpacity>
-
             </View>
+            </>
         )
     }
 
+    firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid)
+    .onSnapshot((doc) => {
+        setChildrenData([doc.data().children])
+    })
+
     return(
         <View style = {styles.container}>
+            {childrenData != null ? (
+                <>
+                </>
+            ) : (
+                // 子供がまだいない場合
+                <Text>設定からお子様を登録しましょう。</Text>
+            )}
             {/* Data Nav Icon */}
             {/* Scroller */}
             {/* Card */}
             {/* Card */}
-            <Card />
-            <Card />
+            <Card name = 'ミルク'/>
+            <Card name = 'オムツ'/>
         </View>
     )
 }

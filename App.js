@@ -19,7 +19,7 @@ const Stack = createStackNavigator()
 export default function App({navigation}){
 
   let [ isLogged, setIsLogged ] = useState(false)
-  let [ isDone, setIsDone ] = useState(false)
+  let [ isDone, setIsDone ] = useState()
 
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -34,11 +34,10 @@ export default function App({navigation}){
       <Stack.Navigator>
         { isLogged ? (
           <>
-            <Stack.Screen name = 'user'  component = {UserScreen}  options = {{title: 'ユーザー名'}}/>
-            <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}}/>
-            <Stack.Screen name = 'child'  component = {ChildScreen}  options = {{title: '子供の名前'}}/>
-            <Stack.Screen name = 'load' component = {LoadingScreen} options = {{ headerShown: false }}/>
-          </>
+              <Stack.Screen name = 'user'  component = { UserScreen }  options = {{title: 'ユーザー名'}}/>
+              <Stack.Screen name = 'child'  component = { ChildScreen }  options = {{title: '子供の名前'}}/>
+              <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}} />
+            </>
         ) : (
           <>
             <Stack.Screen name = 'auth' component = { AuthScreen } options = {{ title: 'ログイン',headerShown: false }}/>
