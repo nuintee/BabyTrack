@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
             flexGrow:0,
             width:100+'%',
             flexDirection:'row',
-            marginVertical: 10
+            marginVertical: 10,
         },
     })
 
@@ -152,10 +152,11 @@ const HomeScreen = ({ navigation }) => {
                                                 display:'flex',
                                                 justifyContent:'center',
                                                 alignItems:'center',
-                                                backgroundColor: index == currentChild ? 'red': 'blue',
+                                                backgroundColor: index == currentChild ? '#FFF': '#AEAEAE',
                                                 height:50,
                                                 width: 100,
-                                                margin: 10,
+                                                marginVertical: 10,
+                                                marginLeft: index == 0 ? 40 : 20,
                                                 borderRadius:20
                                             }
                                         } 
@@ -164,7 +165,13 @@ const HomeScreen = ({ navigation }) => {
                                             setCurrentChild(index)
                                         }}>
                                             
-                                        <Text>{item.children[key].name}</Text>
+                                        <TextInput pointerEvents="none" style = {
+                                            {
+                                                height:30,
+                                                borderBottomColor:index == currentChild ? '#86E3CE' : 'grey',borderBottomWidth:2
+                                            }
+                                        } 
+                                        editable = {false}>{item.children[key].name}</TextInput>
 
                                     </TouchableOpacity>
                                 ))
