@@ -1,3 +1,4 @@
+import { firestore } from 'firebase'
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -64,15 +65,15 @@ const ChildScreen = ({ route, navigation }) => {
             .then((doc) => {
                 if (doc.data()){
                     // Creating Auto Incremented ID -->
-                    let len = Object.keys(doc.data().children).length
-                    let lastData = Object.keys(doc.data().children)[len - 1]
-                    let lastIndex = lastData.match(/\d/g).pop()
-                    let nextIndex = Number(lastIndex) + 1
+                    // let len = Object.keys(doc.data().children).length
+                    // let lastData = Object.keys(doc.data().children)[len - 1]
+                    // let lastIndex = lastData.match(/\d/g).pop()
+                    // let nextIndex = Number(lastIndex) + 1
                     // <--
 
                     // If there is userdata already => Update
                     firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).update({
-                        [`children.user_${nextIndex}`]: childName
+                        [`children.user_${0}`]: { name : childName, milk : firebase.firestore.FieldValue.serverTimestamp(), diaper: firebase.firestore.FieldValue.serverTimestamp()}
                     })
                     .then(() => {
                         alert('更新しました！')
@@ -85,7 +86,7 @@ const ChildScreen = ({ route, navigation }) => {
                 else{
                     // If there is no userdata yet => Add
                     firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).set({
-                        'children.user_0': childName,
+                        'children.user_0': {diaper : 1 ,milk : 1 , name : childName},
                         email: firebase.auth().currentUser.email
                     })
                     .then(() => {

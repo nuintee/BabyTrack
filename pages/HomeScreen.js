@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef, Children } from 'react'
-import { Text, View, StyleSheet} from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView} from 'react-native'
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
 
-    let [ childrenData, setChildrenData ] = useState();
+    let [ childrenData, setChildrenData ] = useState(null);
     let [ currentChild, setCurrentChild ] = useState(0);
+    let [ lastMilkUpdate, setLastMilkUpdate ] = useState();
+    let [ lastDiaperUpdate, setLastDiaperUpdate ] = useState();
     const flatlist = useRef();
 
     // Height
@@ -19,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
     const styles = StyleSheet.create({
         container:{
             flex:1,
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             alignItems: 'center'
         },
         card:{
@@ -80,6 +82,7 @@ const HomeScreen = ({ navigation }) => {
             flexGrow:0,
             width:100+'%',
             flexDirection:'row',
+            marginVertical: 10
         },
     })
 
@@ -94,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
     const Card = (props) => {
-        let { name, color } = props;
+        let { name, color, time } = props;
 
         name == 'ミルク' ? color = '#86E3CE' : color = 'purple'
 
@@ -105,13 +108,12 @@ const HomeScreen = ({ navigation }) => {
                     <Text>{name}</Text>
                     
                     <View style = {styles.card_displayCupsule}>
-                        <Text style = {styles.whiteText}>46分前</Text>
+                        <Text style = {styles.whiteText}>{time}</Text>
                     </View>
                 </View>
 
                 <View style = {styles.inputGroup}>
-                    {/* <TextInput style = {styles.actionTextInput} placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput> */}
-
+                    <TextInput style = {styles.actionTextInput} placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput>
                 </View>
 
                 <TouchableOpacity style = {styles.actionButton} onPress = {() => setInit(init + 1)}>
@@ -133,9 +135,10 @@ const HomeScreen = ({ navigation }) => {
     }, [])
 
     return(
-        <View style = {styles.container}>
+        <SafeAreaView style = {styles.container}>
             {childrenData != null ? (
                 <View style = {styles.carouselContainer}>
+                    
                     <FlatList 
                         ref = {flatlist}
                         data = { [childrenData] }
@@ -157,11 +160,11 @@ const HomeScreen = ({ navigation }) => {
                                             }
                                         } 
 
-                                        onPress = {(item) => {
+                                        onPress = {() => {
                                             setCurrentChild(index)
                                         }}>
-
-                                        <Text>{item.children[key]}</Text>
+                                            
+                                        <Text>{item.children[key].name}</Text>
 
                                     </TouchableOpacity>
                                 ))
@@ -180,9 +183,13 @@ const HomeScreen = ({ navigation }) => {
             {/* Scroller */}
             {/* Card */}
             {/* Card */}
-            <Card name = 'ミルク'/>
-            <Card name = 'オムツ'/>
-        </View>
+            <Card name = 'ミルク' time = { 
+                childrenData ? childrenData.children['user_'+currentChild].milk.toString() : 'まだデータがありません'
+            }/>
+            <Card name = 'オムツ' time = {
+                childrenData ? childrenData.children['user_'+currentChild].diaper.toString() : 'まだデータがありません'
+            }/>
+        </SafeAreaView>
     )
 }
 

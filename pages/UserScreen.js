@@ -85,6 +85,7 @@ const UserScreen = ({ navigation }, props) => {
                     })
                     .then(() => {
                         alert('追加しました!')
+                        navigation.navigate('child')
                     })
                     .catch(err => {
                         alert(err)
