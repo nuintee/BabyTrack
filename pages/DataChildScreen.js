@@ -135,6 +135,24 @@ const DataChildScreen = ({route}) => {
             [`record_${index}.subject`] : updSubject,
             [`record_${index}.who`] : updWho,
         })
+        .then(() => {
+
+        })
+        .catch(err => {
+            alert(err)
+        }) 
+    }
+
+    const deleteRecord = () => {
+        firebase.firestore().collection('Record').doc(firebase.auth().currentUser.uid).update({
+            [`record_${index}`] : firebase.firestore.FieldValue.delete(),
+        })
+        .then(() => {
+            alert('deleted')
+        })
+        .catch(err => {
+            alert(err)
+        }) 
     }
 
     const ActionButton = (props) => {
@@ -142,14 +160,14 @@ const DataChildScreen = ({route}) => {
 
         if (action == 'update'){
             color = '#86E3CE';
-            func = updateRecord;
-        }
-        else{
+            func  = () => updateRecord;
+        } 
+        else {
             color = '#FC887B';
-            func = () => {alert('delete')}
+            func = () => deleteRecord
         }
 
-        const styles = StyleSheet.create({
+        const ABStyles = StyleSheet.create({
             actionButton:{
                 display:'flex',
                 justifyContent:'center',
@@ -176,12 +194,14 @@ const DataChildScreen = ({route}) => {
             },
         })
 
+
         return(
-            <TouchableOpacity style = {styles.actionButton} onPress = {func}>
-                <Text style = {styles.actionButtonText}>{title}</Text>
+            <TouchableOpacity style = {ABStyles.actionButton} onPress = {func}>
+                <Text style = {ABStyles.actionButtonText}>{title}</Text>
             </TouchableOpacity>
         )
     }
+
 
     return(
         <SafeAreaView style = {styles.container}>
