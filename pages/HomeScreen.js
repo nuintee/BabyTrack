@@ -89,7 +89,7 @@ const HomeScreen = ({ navigation }) => {
                     <Text>{name}</Text>
                     
                     <View style = {styles.card_displayCupsule}>
-                        <Text style = {styles.whiteText}>{time + '分前'}</Text>
+                        <Text style = {styles.whiteText}>{time}</Text>
                     </View>
                 </View>
 
@@ -125,8 +125,10 @@ const HomeScreen = ({ navigation }) => {
         )
     }
 
-    const TimeUpdate = () => {
-        //childrenData.children['user_'+currentChild].milk.toDate().getMinutes()
+    const TimeUpdate = (subject) => {
+        return(
+            Math.floor ((currentDate - childrenData.children['user_'+currentChild][subject].toDate())　/ 1000　/ 60 )
+        )
     }
 
     useEffect(() => {
@@ -201,10 +203,14 @@ const HomeScreen = ({ navigation }) => {
             {/* Card */}
             {/* Card */}
             <Card name = 'ミルク' time = { 
-                childrenData ?  Math.floor(( currentDate - childrenData.children['user_'+currentChild].milk.toDate() ) / 1000 / 60)  : 'まだデータがありません'
+                childrenData ? 
+                    TimeUpdate('milk') < 60 ? TimeUpdate('milk')　+ '分前' : Math.floor(TimeUpdate('milk') / 60) + '時間前'
+                    : 'まだデータがありません'
             }   color = 'green'/>
             <Card name = 'オムツ' time = {
-                childrenData ? Math.floor(( currentDate - childrenData.children['user_'+currentChild].diaper.toDate() ) / 1000 / 60)  : 'まだデータがありません'
+                childrenData ? 
+                TimeUpdate('diaper') < 60 ? TimeUpdate('diaper')　+ '分前' : Math.floor(TimeUpdate('diaper') / 60) + '時間前'  
+                    : 'まだデータがありません'
             }   color = 'purple'/>
         </SafeAreaView>
     )
