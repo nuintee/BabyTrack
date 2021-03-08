@@ -73,7 +73,7 @@ const ChildScreen = ({ route, navigation }) => {
 
                     // If there is userdata already => Update
                     firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).update({
-                        [`children.user_${0}`]: { name : childName, milk : firebase.firestore.FieldValue.serverTimestamp(), diaper: firebase.firestore.FieldValue.serverTimestamp()}
+                        [`children.user_${0}.name`]: childName
                     })
                     .then(() => {
                         alert('更新しました！')
@@ -86,7 +86,7 @@ const ChildScreen = ({ route, navigation }) => {
                 else{
                     // If there is no userdata yet => Add
                     firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid).set({
-                        'children.user_0': {diaper : 1 ,milk : 1 , name : childName},
+                        'children.user_0': { name : childName, milk : firebase.firestore.FieldValue.serverTimestamp(), diaper: firebase.firestore.FieldValue.serverTimestamp()},
                         email: firebase.auth().currentUser.email
                     })
                     .then(() => {

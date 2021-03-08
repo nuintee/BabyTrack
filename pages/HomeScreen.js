@@ -209,7 +209,7 @@ const HomeScreen = ({ navigation }) => {
             }   color = 'green'/>
             <Card name = 'オムツ' time = {
                 childrenData ? 
-                TimeUpdate('diaper') < 60 ? TimeUpdate('diaper')　+ '分前' : Math.floor(TimeUpdate('diaper') / 60) + '時間前'  
+                TimeUpdate('diaper') < 60 ? TimeUpdate('diaper')　+ '分前' : Math.floor(TimeUpdate('diaper') / 60 ) + '時間前'  
                     : 'まだデータがありません'
             }   color = 'purple'/>
         </SafeAreaView>

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { SafeAreaView, SafeAreaViewBase, Text } from 'react-native';
+import { Button, SafeAreaView, SafeAreaViewBase, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -13,6 +13,7 @@ import UserScreen from './pages/UserScreen'
 import ChildScreen from './pages/ChildScreen'
 import LoadingScreen from './pages/LoadingScreen'
 import SettingsScreen from './pages/SettingsScreen'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator()
 
@@ -36,7 +37,19 @@ export default function App({navigation}){
           <>
               <Stack.Screen name = 'user'  component = { UserScreen }  options = {{title: 'ユーザー名'}}/>
               <Stack.Screen name = 'child'  component = { ChildScreen }  options = {{title: '子供の名前'}}/>
-              <Stack.Screen name = 'home' component = { HomeScreen } options = {{title: 'ホーム', headerLeft: null}} />
+              <Stack.Screen name = 'home' component = { HomeScreen } options = {(navigation) => ({
+                title: 'ホーム',
+                headerLeft: () => (
+                  <Button title = 'データ'　onPress = {() => navigation.navigation.navigate('data')}/>
+                )
+              })} />
+              <Stack.Screen name = 'data'  component = { DataScreen }  options = {(navigation) => ({
+                title: 'データ',
+                headerRight: () => (
+                  <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
+                )
+              })}/>
+              <Stack.Screen name = 'settings' component = { SettingsScreen } />
             </>
         ) : (
           <>
