@@ -8,7 +8,8 @@ import firebase from './firebase'
 import HomeScreen from './pages/HomeScreen'
 import AuthScreen from './pages/AuthScreen'
 import PasswordResetScreen from './pages/PasswordResetScreen'
-import DataScreen from './pages/DataScreen'
+import DataListScreen from './pages/DataListScreen'
+import DataChildScreen from './pages/DataChildScreen'
 import UserScreen from './pages/UserScreen'
 import ChildScreen from './pages/ChildScreen'
 import LoadingScreen from './pages/LoadingScreen'
@@ -40,7 +41,7 @@ export default function App({navigation}){
               <Stack.Screen name = 'home' component = { HomeScreen } options = {(navigation) => ({
                 title: 'ホーム',
                 headerLeft: () => (
-                  <Button title = 'データ'　onPress = {() => navigation.navigation.navigate('data')}/>
+                  <Button title = 'データ一覧'　onPress = {() => navigation.navigation.navigate('data')}/>
                 ),
                 headerRight: () => (
                   <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
@@ -48,13 +49,14 @@ export default function App({navigation}){
                 headerLeftContainerStyle: {marginLeft: 20},
                 headerRightContainerStyle: {marginRight: 20}
               })} />
-              <Stack.Screen name = 'data'  component = { DataScreen }  options = {(navigation) => ({
-                title: 'データ',
+              <Stack.Screen name = 'data'  component = { DataListScreen }  options = {(navigation) => ({
+                title: 'データ一覧',
                 headerRight: () => (
                   <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
                 ),
                 headerRightContainerStyle: {marginRight: 20}
               })}/>
+              <Stack.Screen name = 'dataChild' component = { DataChildScreen } options = {{title: 'データ'}} />
               <Stack.Screen name = 'settings' component = { SettingsScreen } options = {{title: '設定'}} />
             </>
         ) : (

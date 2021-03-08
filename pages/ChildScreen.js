@@ -28,8 +28,16 @@ const ChildScreen = ({ route, navigation }) => {
             borderRadius: br,
             height: h,
             width: w,
-            backgroundColor: '#86E3CE'
+            backgroundColor: '#86E3CE',
             /* Shadow */
+            shadowColor: "#000",
+            shadowOffset: {
+                width:0,
+                height:3
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            //elevation:1
         },
         actionButtonText:{
             fontWeight: 'bold',

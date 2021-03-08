@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { color } from 'react-native-reanimated'
 import firebase from '../firebase'
 
-const DataScreen = () => {
+const DataListScreen = ({navigation}) => {
     const [ recordData, setRecordData ] = useState(null)
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const DataScreen = () => {
     })
 
     const RecordBar = (props) => {
-        let { subject, who, when, detail } = props
+        let { subject, who, when, detail, index } = props
 
         //Time Formatt -->
         const month = when.getMonth() + 1;
@@ -76,22 +76,32 @@ const DataScreen = () => {
             }
         })
 
+        const pressHandler = () => {
+            navigation.navigate('dataChild',{
+                subject : subject,
+                when : time,
+                who : who,
+                detail : detail,
+                index: index
+            })
+        }
+
         return (
-            <View style = {styles.record}>
+            <TouchableOpacity style = {styles.record} onPress = {pressHandler}>
                 <View style = {styles.subject_display}>
                     <Text style = {styles.subject_text}>{subject}</Text>
                 </View>
                 <Text style = {styles.detail_text}>{detail}</Text>
                 <Text>{time}</Text>
                 <Text>{who}</Text>
-            </View>
+            </TouchableOpacity>
         )
     }
     
     const RenderItem = ({item}) => {
         return (
-            Object.keys(item).map(key => (
-                <RecordBar key = {key} subject = {item[key].subject} who = {item[key].who} when = {item[key].when.toDate()} detail = {item[key].detail}/>
+            Object.keys(item).map((key,index) => (
+                <RecordBar key = {key} subject = {item[key].subject} who = {item[key].who} when = {item[key].when.toDate()} detail = {item[key].detail} index = {index} />
             ))
         )
     }
@@ -107,4 +117,4 @@ const DataScreen = () => {
     )
 }
 
-export default DataScreen
+export default DataListScreen
