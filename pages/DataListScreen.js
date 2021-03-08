@@ -8,7 +8,6 @@ const DataListScreen = ({navigation}) => {
     const [ recordData, setRecordData ] = useState(null)
 
     useEffect(() => {
-
         const unsubscribe = firebase.firestore().collection('Record').doc(firebase.auth().currentUser.uid)
         .onSnapshot((snap) => {
             const data = snap.data()
@@ -109,7 +108,7 @@ const DataListScreen = ({navigation}) => {
     return(
         <View style = {styles.container}>
              {recordData != null ? (
-                <FlatList data = {[recordData]} renderItem = {RenderItem} keyExtractor = {(item,index) => index.toString()} inverted/>
+                <FlatList data = {[recordData]} renderItem = {RenderItem} keyExtractor = {(item,index) => index.toString()} bounces = {false} contentContainerStyle = {{flexGrow:0.5,justifyContent:'flex-end'}} inverted/>
              ) : (
                 <Text>データがありません</Text>
              )}

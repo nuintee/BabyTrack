@@ -56,7 +56,7 @@ export default function App({navigation}){
                 ),
                 headerRightContainerStyle: {marginRight: 20}
               })}/>
-              <Stack.Screen name = 'dataChild' component = { DataChildScreen } options = {{title: 'データ'}} />
+              <Stack.Screen name = 'dataChild' component = { DataChildScreen } options = {{title: 'データ編集'}} />
               <Stack.Screen name = 'settings' component = { SettingsScreen } options = {{title: '設定'}} />
             </>
         ) : (

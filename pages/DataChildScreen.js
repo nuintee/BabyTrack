@@ -1,10 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { TextInput, NumberInput, TouchableOpacity } from 'react-native-gesture-handler'
+import firebase from '../firebase'
 
 const DataChildScreen = ({route}) => {
 
     let { subject, who, when, detail, index } = route.params
+
+    let [ updSubject, setUpdSubject ] = useState(subject)
+    let [ updDetail, setUpdDetail ] = useState(detail)
+    let [ updTime, setUpdTime ] = useState(when)
+    let [ updWho, setUpdWho ] = useState(who)
+
+    // Time Separater
+    const str = when.split( /[\/\-\:]/g )
+    const num = str.map(nb => parseInt(nb))
+
+    const [ month, date, hour, minutes ] = num
 
     // Height
     const h = 55
@@ -67,33 +79,62 @@ const DataChildScreen = ({route}) => {
             padding:10,
             marginHorizontal:10,
             textAlign: 'center'
+        },
+        timeRecordContainer:{
+            display:'flex',
+            flexDirection:'row',
+            alignItems:'center',
+        },
+        timeRecordText:{
+            backgroundColor:'#FFF',
+            borderBottomWidth:1,
+            borderBottomColor: '#E3E0E0',
+            padding:10,
+            marginHorizontal:10,
+            textAlign: 'center'
         }
     })
 
     const EditableRecord = (props) => {
-        let { title, display } = props
+        let { title, display, oct } = props
 
-        switch (title){
-            case subject:
-                display = '項目'
-                break
-            case detail:
-                display = '詳細'
-                break
-            case when:
-                display = '時間'
-                break
-            case who:
-                display = '保護者'
-                break
+        if (title == subject){
+            display = '項目'
+        } else if (title == detail){
+            display = '詳細'
+        } else if (title == when){
+            display = '時間'
+        } else if (title == who){
+            display = '保護者'
         }
 
         return(
             <View style = {styles.editableRecord}>
                 <Text>{display}</Text>
-                <TextInput style = {styles.recordInput}>{title}</TextInput>
+                {title == when 
+                ? (
+                    <View style = {styles.timeRecordContainer}>
+                        <TextInput style = {styles.timeRecordText}>{month}</TextInput>
+                        <Text>/</Text>
+                        <TextInput style = {styles.timeRecordText}>{date}</TextInput>
+                        <Text>-</Text>
+                        <TextInput style = {styles.timeRecordText}>{hour}</TextInput>
+                        <Text>:</Text>
+                        <TextInput style = {styles.timeRecordText}>{minutes}</TextInput>
+                    </View>
+                )
+                : <TextInput style = {styles.recordInput}>{title}</TextInput>              
+                }
             </View>
         )
+    }
+
+    const updateRecord = () => {
+        firebase.firestore().collection('Record').doc(firebase.auth().currentUser.uid).update({
+            [`record_${index}.detail`] : updDetail,
+            [`record_${index}.subject`] : updSubject,
+            [`record_${index}.who`] : updWho,
+        })
     }
 
     const ActionButton = (props) => {
@@ -101,7 +142,7 @@ const DataChildScreen = ({route}) => {
 
         if (action == 'update'){
             color = '#86E3CE';
-            func = () => {alert('update')};
+            func = updateRecord;
         }
         else{
             color = '#FC887B';
@@ -145,20 +186,21 @@ const DataChildScreen = ({route}) => {
     return(
         <SafeAreaView style = {styles.container}>
 
+            {/* The Top One */}
             <View style = {styles.record}>
                 <View style = {styles.subject_display}>
-                    <Text style = {styles.subject_text}>{subject}</Text>
+                    <Text style = {styles.subject_text}>{updSubject}</Text>
                 </View>
-                <Text style = {styles.detail_text}>{detail}</Text>
-                <Text>{when}</Text>
-                <Text>{who}</Text>
+                <Text style = {styles.detail_text}>{updDetail}</Text>
+                <Text>{updTime}</Text>
+                <Text>{updWho}</Text>
             </View>
             
             <View style = {{ width : 100+'%'}}>
-                <EditableRecord title = {subject}/>
-                <EditableRecord title = {detail}/>
-                <EditableRecord title = {when}/>
-                <EditableRecord title = {who}/>
+                <EditableRecord title = {updSubject}/>
+                <EditableRecord title = {updDetail}/>
+                <EditableRecord title = {updTime}/>
+                <EditableRecord title = {updWho}/>
             </View>
             
             <View style = {{ marginVertical:5}}>

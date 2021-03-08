@@ -1,7 +1,9 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import firebase from '../firebase'
 
-const SettingsScreen = () => {
+const SettingsScreen = ({navigation}) => {
 
     const styles = StyleSheet.create({
         container:{
@@ -11,9 +13,21 @@ const SettingsScreen = () => {
         }
     })
 
+    const Logout = () => {
+        firebase.auth().signOut()
+        .then(() => {
+            navigation.navigate('auth')
+        })
+        .catch(err => {
+            alert(err)
+        })
+    }
+
     return(
         <View style = {styles.container}>
-            <Text>SettingsScreen</Text>
+            <TouchableOpacity　onPress = {() => firebase.auth().signOut()}>
+                <Text>ログアウト</Text>
+            </TouchableOpacity>
         </View>
     )
 }
