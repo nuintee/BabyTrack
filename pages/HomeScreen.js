@@ -8,8 +8,7 @@ const HomeScreen = ({ navigation }) => {
     let [ childrenData, setChildrenData ] = useState(null);
     let [ currentDate, setCurrentDate ] = useState()
     let [ currentChild, setCurrentChild ] = useState(0);
-    let [ lastMilkUpdate, setLastMilkUpdate ] = useState();
-    let [ lastDiaperUpdate, setLastDiaperUpdate ] = useState();
+    let [ milkPorion, setMilkPortion ] = useState();
     const flatlist = useRef();
 
     // Height
@@ -33,7 +32,17 @@ const HomeScreen = ({ navigation }) => {
             backgroundColor: '#FFF',
             borderRadius: 20,
             padding:20,
-            marginTop: 10
+            marginTop: 0,
+            marginBottom:10,
+            /* Shadow */
+            shadowColor: "#000",
+            shadowOffset: {
+                width:0,
+                height:3
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            //elevation:1
         },
         card_displayGroup:{
             display:'flex',
@@ -104,7 +113,7 @@ const HomeScreen = ({ navigation }) => {
                         paddingHorizontal: 20,
                         marginVertical: 5
                     }} 
-                    placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput>
+                    placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation' onChangeText = {(input) => setMilkPortion(input)}></TextInput>
                 </View>
 
                 <TouchableOpacity style = {{
@@ -145,50 +154,60 @@ const HomeScreen = ({ navigation }) => {
         return () => unsubscribe();
     }, [])
 
+    const RenderItem = ({item}) => {
+        return(
+            Object.keys(item.children).map((key,index) => (
+            <TouchableOpacity key = {key} index = {index} 
+
+                style = {
+                    {
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems:'center',
+                        backgroundColor: index == currentChild ? '#FFF': '#AEAEAE',
+                        height:50,
+                        width: 100,
+                        paddingHorizontal:15,
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginLeft: index == 0 ? 40 : 20,
+                        borderRadius:20,
+                        /* Shadow */
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width:0,
+                            height:3
+                        },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 2,
+                        //elevation:1
+                    }
+                } 
+
+                onPress = {() => {
+                    setCurrentChild(index)
+                }}>
+                    
+                <TextInput pointerEvents="none" style = {
+                    {
+                        height:30,
+                        borderBottomColor:index == currentChild ? '#86E3CE' : 'grey',borderBottomWidth:2
+                    }
+                } 
+                editable = {false}>{item.children[key].name}</TextInput>
+
+            </TouchableOpacity>
+            ))
+        )   
+    }
+
     return(
         <SafeAreaView style = {styles.container}>
             {childrenData != null ? (
                 <View style = {styles.carouselContainer}>
                     
-                    <FlatList 
-                        ref = {flatlist}
-                        data = { [childrenData] }
-                        renderItem = {({item}) => {
-                            return(
-                                    Object.keys(item.children).map((key,index) => (
-                                    <TouchableOpacity key = {key} index = {index} 
-
-                                        style = {
-                                            {
-                                                display:'flex',
-                                                justifyContent:'center',
-                                                alignItems:'center',
-                                                backgroundColor: index == currentChild ? '#FFF': '#AEAEAE',
-                                                height:50,
-                                                width: 100,
-                                                paddingHorizontal:15,
-                                                marginTop: 10,
-                                                marginLeft: index == 0 ? 40 : 20,
-                                                borderRadius:20
-                                            }
-                                        } 
-
-                                        onPress = {() => {
-                                            setCurrentChild(index)
-                                        }}>
-                                            
-                                        <TextInput pointerEvents="none" style = {
-                                            {
-                                                height:30,
-                                                borderBottomColor:index == currentChild ? '#86E3CE' : 'grey',borderBottomWidth:2
-                                            }
-                                        } 
-                                        editable = {false}>{item.children[key].name}</TextInput>
-
-                                    </TouchableOpacity>
-                                ))
-                            )
-                        } }
+                    <FlatList ref = {flatlist} data = { [childrenData] }
+                        renderItem = {RenderItem}
                         horizontal
                         keyExtractor = {(item,index) => index.toString()}
                         scrollEnabled = {true}
@@ -198,10 +217,6 @@ const HomeScreen = ({ navigation }) => {
                 // 子供がまだいない場合
                 <Text>設定からお子様を登録しましょう。</Text>
             )}
-            {/* Data Nav Icon */}
-            {/* Scroller */}
-            {/* Card */}
-            {/* Card */}
             <Card name = 'ミルク' time = { 
                 childrenData ? 
                     TimeUpdate('milk') < 60 ? TimeUpdate('milk')　+ '分前' : Math.floor(TimeUpdate('milk') / 60) + '時間前'

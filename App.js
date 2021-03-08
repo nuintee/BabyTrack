@@ -41,15 +41,21 @@ export default function App({navigation}){
                 title: 'ホーム',
                 headerLeft: () => (
                   <Button title = 'データ'　onPress = {() => navigation.navigation.navigate('data')}/>
-                )
+                ),
+                headerRight: () => (
+                  <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
+                ),
+                headerLeftContainerStyle: {marginLeft: 20},
+                headerRightContainerStyle: {marginRight: 20}
               })} />
               <Stack.Screen name = 'data'  component = { DataScreen }  options = {(navigation) => ({
                 title: 'データ',
                 headerRight: () => (
                   <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
-                )
+                ),
+                headerRightContainerStyle: {marginRight: 20}
               })}/>
-              <Stack.Screen name = 'settings' component = { SettingsScreen } />
+              <Stack.Screen name = 'settings' component = { SettingsScreen } options = {{title: '設定'}} />
             </>
         ) : (
           <>
