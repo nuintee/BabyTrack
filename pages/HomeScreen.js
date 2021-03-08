@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Children } from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import { Text, View, StyleSheet, SafeAreaView} from 'react-native'
 import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import firebase from '../firebase'
@@ -6,6 +6,7 @@ import firebase from '../firebase'
 const HomeScreen = ({ navigation }) => {
 
     let [ childrenData, setChildrenData ] = useState(null);
+    let [ currentDate, setCurrentDate ] = useState()
     let [ currentChild, setCurrentChild ] = useState(0);
     let [ lastMilkUpdate, setLastMilkUpdate ] = useState();
     let [ lastDiaperUpdate, setLastDiaperUpdate ] = useState();
@@ -41,16 +42,6 @@ const HomeScreen = ({ navigation }) => {
             justifyContent:'space-between',
             width: 100 + '%'
         },
-        actionButton:{
-            display:'flex',
-            justifyContent:'center',
-            alignItems: 'center',
-            borderRadius: br,
-            height: h,
-            width: w,
-            backgroundColor: '#86E3CE',
-            /* Shadow */
-        },
         actionButtonText:{
             fontWeight: 'bold',
             color: '#FFF',
@@ -58,16 +49,6 @@ const HomeScreen = ({ navigation }) => {
         },
         inputGroup:{
             marginVertical: 20
-        },
-        actionTextInput:{
-            height:h,
-            width:150,
-            fontSize:20,
-            backgroundColor:'#FFF',
-            borderBottomWidth:2,
-            borderBottomColor:'#86E3CE',
-            paddingHorizontal: 20,
-            marginVertical: 5
         },
         card_displayCupsule:{
             padding:10,
@@ -99,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
     const Card = (props) => {
         let { name, color, time } = props;
 
-        name == 'ミルク' ? color = '#86E3CE' : color = 'purple'
+        color == 'green' ? color = '#86E3CE' : color = '#CCABDA'
 
         return(
             <>
@@ -108,20 +89,44 @@ const HomeScreen = ({ navigation }) => {
                     <Text>{name}</Text>
                     
                     <View style = {styles.card_displayCupsule}>
-                        <Text style = {styles.whiteText}>{time}</Text>
+                        <Text style = {styles.whiteText}>{time + '分前'}</Text>
                     </View>
                 </View>
 
                 <View style = {styles.inputGroup}>
-                    <TextInput style = {styles.actionTextInput} placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput>
+                    <TextInput style = {{
+                        height:h,
+                        width:150,
+                        fontSize:20,
+                        backgroundColor:'#FFF',
+                        borderBottomWidth:2,
+                        borderBottomColor: color,
+                        paddingHorizontal: 20,
+                        marginVertical: 5
+                    }} 
+                    placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation'></TextInput>
                 </View>
 
-                <TouchableOpacity style = {styles.actionButton} onPress = {() => setInit(init + 1)}>
+                <TouchableOpacity style = {{
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems: 'center',
+                        borderRadius: br,
+                        height: h,
+                        width: w,
+                        backgroundColor: color,
+                        /* Shadow */
+                }} 
+                onPress = {() => alert('clicked!')}>
                     <Text style = {styles.actionButtonText}>{name}</Text>
                 </TouchableOpacity>
             </View>
             </>
         )
+    }
+
+    const TimeUpdate = () => {
+        //childrenData.children['user_'+currentChild].milk.toDate().getMinutes()
     }
 
     useEffect(() => {
@@ -130,6 +135,10 @@ const HomeScreen = ({ navigation }) => {
             const data = snap.data()
             setChildrenData(data)
         })
+
+        setInterval(() => {
+            setCurrentDate(new Date())
+        },1000)
 
         return () => unsubscribe();
     }, [])
@@ -155,7 +164,8 @@ const HomeScreen = ({ navigation }) => {
                                                 backgroundColor: index == currentChild ? '#FFF': '#AEAEAE',
                                                 height:50,
                                                 width: 100,
-                                                marginVertical: 10,
+                                                paddingHorizontal:15,
+                                                marginTop: 10,
                                                 marginLeft: index == 0 ? 40 : 20,
                                                 borderRadius:20
                                             }
@@ -191,11 +201,11 @@ const HomeScreen = ({ navigation }) => {
             {/* Card */}
             {/* Card */}
             <Card name = 'ミルク' time = { 
-                childrenData ? childrenData.children['user_'+currentChild].milk.toString() : 'まだデータがありません'
-            }/>
+                childrenData ?  Math.floor(( currentDate - childrenData.children['user_'+currentChild].milk.toDate() ) / 1000 / 60)  : 'まだデータがありません'
+            }   color = 'green'/>
             <Card name = 'オムツ' time = {
-                childrenData ? childrenData.children['user_'+currentChild].diaper.toString() : 'まだデータがありません'
-            }/>
+                childrenData ? Math.floor(( currentDate - childrenData.children['user_'+currentChild].diaper.toDate() ) / 1000 / 60)  : 'まだデータがありません'
+            }   color = 'purple'/>
         </SafeAreaView>
     )
 }
