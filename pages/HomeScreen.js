@@ -1,40 +1,47 @@
 import React, { useState, useEffect, useRef} from 'react'
-import { Text, View, StyleSheet, SafeAreaView} from 'react-native'
-import { FlatList, ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { Text, View, StyleSheet, SafeAreaView,FlatList, ScrollView, TextInput, TouchableOpacity} from 'react-native'
 import firebase from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
+    return(
+        <SafeAreaView>
+            <Swiper />
+            <Card title = 'milk'/>
+            <Card title = 'diaper' />
+        </SafeAreaView>
+    )
+}
 
-    let [ childrenData, setChildrenData ] = useState(null);
-    let [ currentDate, setCurrentDate ] = useState()
-    let [ currentChild, setCurrentChild ] = useState(0);
-    let [ milkPorion, setMilkPortion ] = useState();
-    const flatlist = useRef();
+const Swiper = () => {
+    return(
+        <FlatList />
+    )
+}
 
-    // Height
-    const h = 55
-    // Width
-    const w = 275
-    // BorderRadius
-    const br = 20
+const Card = (props) => {
+    let { title, color, action} = props
 
-    const styles = StyleSheet.create({
-        container:{
-            flex:1,
-            justifyContent: 'flex-start',
-            alignItems: 'center'
-        },
+    if (title == 'milk'){
+        title = 'ミルク'
+        color = '#86E3CE'
+        action = 'number'
+    } else {
+        title = 'オムツ'
+        color = '#CCABDA'
+        action = 'select'
+    }
+
+    const card_style = StyleSheet.create({
         card:{
             display:'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
+            alignItems:'center',
             justifyContent: 'space-between',
-            width: 80 + '%',
-            backgroundColor: '#FFF',
+            backgroundColor:'#FFF',
+            margin:10,
+            padding: 20,
             borderRadius: 20,
-            padding:20,
-            marginTop: 0,
-            marginBottom:10,
-            /* Shadow */
+            height: 200,
             shadowColor: "#000",
             shadowOffset: {
                 width:0,
@@ -42,192 +49,96 @@ const HomeScreen = ({ navigation }) => {
             },
             shadowOpacity: 0.1,
             shadowRadius: 2,
-            //elevation:1
+            elevation:2
         },
-        card_displayGroup:{
+        card_header:{
             display:'flex',
             flexDirection: 'row',
-            alignItems:'center',
-            justifyContent:'space-between',
-            width: 100 + '%'
+            alignItems: 'center',
+            width: 100 + '%',
+            justifyContent: 'space-between',
         },
-        actionButtonText:{
-            fontWeight: 'bold',
-            color: '#FFF',
-            fontSize: 16
-        },
-        inputGroup:{
-            marginVertical: 20
-        },
-        card_displayCupsule:{
+        card_capsule:{
             padding:10,
-            borderRadius:20,
-            backgroundColor:'#919191'
-        },
-        whiteText:{
-            color: '#FFF'
-        },
-        carouselContainer:{
-            display:'flex',
-            flexGrow:0,
-            width:100+'%',
-            flexDirection:'row',
-            marginVertical: 10,
+            backgroundColor:'grey',
+            borderRadius:20
         },
     })
+    
+    return(
+        <View　style = {card_style.card}>
 
-    const pressHandle = () => {
-        firebase.auth().signOut()
-        .then(() => {
-            alert('ログアウトしました。')
-        })
-        .catch((error) => {
-            alert('エラーが起こりました。')
-        })
-    }
-
-    const Card = (props) => {
-        let { name, color, time } = props;
-
-        color == 'green' ? color = '#86E3CE' : color = '#CCABDA'
-
-        return(
-            <>
-            <View style = {styles.card}>
-                <View　style = {styles.card_displayGroup}>
-                    <Text>{name}</Text>
-                    
-                    <View style = {styles.card_displayCupsule}>
-                        <Text style = {styles.whiteText}>{time}</Text>
-                    </View>
+            {/* Header Display */}
+            <View style = {card_style.card_header}>
+                <Text>{title}</Text>
+                {/* Card_capsule */}
+                <View style = {card_style.card_capsule}>
+                    <Text style = {{color: '#FFF'}}>Time</Text>
                 </View>
-
-                <View style = {styles.inputGroup}>
-                    <TextInput style = {{
-                        height:h,
-                        width:150,
-                        fontSize:20,
-                        backgroundColor:'#FFF',
-                        borderBottomWidth:2,
-                        borderBottomColor: color,
-                        paddingHorizontal: 20,
-                        marginVertical: 5
-                    }} 
-                    placeholder = '量' autoCapitalize='none' keyboardType = 'numbers-and-punctuation' onChangeText = {(input) => setMilkPortion(input)}></TextInput>
-                </View>
-
-                <TouchableOpacity style = {{
-                        display:'flex',
-                        justifyContent:'center',
-                        alignItems: 'center',
-                        borderRadius: br,
-                        height: h,
-                        width: w,
-                        backgroundColor: color,
-                        /* Shadow */
-                }} 
-                onPress = {() => alert('clicked!')}>
-                    <Text style = {styles.actionButtonText}>{name}</Text>
-                </TouchableOpacity>
             </View>
-            </>
-        )
-    }
 
-    const TimeUpdate = (subject) => {
-        return(
-            Math.floor ((currentDate - childrenData.children['user_'+currentChild][subject].toDate())　/ 1000　/ 60 )
-        )
-    }
+            <Input type = {action} theme = {color}/>
 
-    useEffect(() => {
-        const unsubscribe = firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid)
-        .onSnapshot((snap) => {
-            const data = snap.data()
-            setChildrenData(data)
-        })
+            <ActionButton title = {title} theme = {color}/>
 
-        setInterval(() => {
-            setCurrentDate(new Date())
-        },1000)
+        </View>
+    )
+}
 
-        return () => unsubscribe();
-    }, [])
+const ActionButton = (props) => {
+    let { title, theme } = props
 
-    const RenderItem = ({item}) => {
-        return(
-            Object.keys(item.children).map((key,index) => (
-            <TouchableOpacity key = {key} index = {index} 
+    const acttionButton_style  = StyleSheet.create({
+        actionButton:{
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'center',
+            backgroundColor: theme,
+            height:55,
+            width:200,
+            borderRadius:20,
+        },
+        actionButton_text:{
+            color: '#FFF'
+        }
+    })
 
-                style = {
-                    {
-                        display:'flex',
-                        justifyContent:'center',
-                        alignItems:'center',
-                        backgroundColor: index == currentChild ? '#FFF': '#AEAEAE',
-                        height:50,
-                        width: 100,
-                        paddingHorizontal:15,
-                        marginTop: 10,
-                        marginBottom: 10,
-                        marginLeft: index == 0 ? 40 : 20,
-                        borderRadius:20,
-                        /* Shadow */
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width:0,
-                            height:3
-                        },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 2,
-                        //elevation:1
-                    }
-                } 
+    return (
+        <TouchableOpacity style = {acttionButton_style.actionButton}>
+                <Text style = {acttionButton_style.actionButton_text}>{title}</Text>
+        </TouchableOpacity>
+    )
+}
 
-                onPress = {() => {
-                    setCurrentChild(index)
-                }}>
-                    
-                <TextInput pointerEvents="none" style = {
-                    {
-                        height:30,
-                        borderBottomColor:index == currentChild ? '#86E3CE' : 'grey',borderBottomWidth:2
-                    }
-                } 
-                editable = {false}>{item.children[key].name}</TextInput>
+const Input = (props) =>{
+    let { type, theme } = props;
+    let [ isOpen, setIsOpen ] = useState(false)
 
-            </TouchableOpacity>
-            ))
-        )   
-    }
+    const input_style = StyleSheet.create({
+        field:{
+            height:40,
+            borderBottomColor: theme,
+            borderBottomWidth: 2,
+            fontSize: 20,
+            width: 150,
+            textAlign:'center'
+        },
+        field_text:{
+            fontSize: 20,
+            textAlign:'center'
+        }
+    })
 
     return(
-        <SafeAreaView style = {styles.container}>
-            {childrenData != null ? (
-                <View style = {styles.carouselContainer}>
-                    
-                    <FlatList ref = {flatlist} data = { [childrenData] }
-                        renderItem = {RenderItem}
-                        horizontal
-                        keyExtractor = {(item,index) => index.toString()}
-                        scrollEnabled = {true}
-                    />
-                </View>
-            ) : (
-                // 子供がまだいない場合
-                <Text>設定からお子様を登録しましょう。</Text>
-            )}
-            <Card name = 'ミルク' time = { 
-                childrenData ? 
-                    TimeUpdate('milk') < 60 ? TimeUpdate('milk')　+ '分前' : Math.floor(TimeUpdate('milk') / 60) + '時間前'
-                    : 'まだデータがありません'
-            }   color = 'green'/>
-            <Card name = 'オムツ' time = {
-                childrenData ? 
-                TimeUpdate('diaper') < 60 ? TimeUpdate('diaper')　+ '分前' : Math.floor(TimeUpdate('diaper') / 60 ) + '時間前'  
-                    : 'まだデータがありません'
-            }   color = 'purple'/>
-        </SafeAreaView>
+        type == 'select' ? 
+        (
+            <TouchableOpacity onPress = {() => setIsOpen(!isOpen)} style = {input_style.field}>
+                <Text style = {input_style.field_text}>Sho</Text>
+            </TouchableOpacity>
+        ) : (
+            <TextInput　placeholder = '量(ml)' style = {input_style.field} keyboardType = {'number-pad'} returnKeyLabel = '完了' returnKeyType = 'done'></TextInput>
+        )
+
     )
 }
 
