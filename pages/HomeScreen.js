@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef} from 'react'
 import { Text, View, StyleSheet, SafeAreaView,FlatList, ScrollView, TextInput, TouchableOpacity} from 'react-native'
+import Picker from 'react-native-dropdown-picker'
+import * as Font from 'expo-font'
+import Icon from 'react-native-vector-icons/Feather';
 import firebase from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
+
     return(
         <SafeAreaView>
             <Swiper />
@@ -99,7 +103,8 @@ const ActionButton = (props) => {
             borderRadius:20,
         },
         actionButton_text:{
-            color: '#FFF'
+            color: '#FFF',
+            fontFamily: 'MPLUSRounded1c'
         }
     })
 
@@ -132,9 +137,7 @@ const Input = (props) =>{
     return(
         type == 'select' ? 
         (
-            <TouchableOpacity onPress = {() => setIsOpen(!isOpen)} style = {input_style.field}>
-                <Text style = {input_style.field_text}>Sho</Text>
-            </TouchableOpacity>
+            <Picker containerStyle = {input_style.field} items = {[{label: 'Sho', value: 'Sho', selected: true}]}/>
         ) : (
             <TextInput　placeholder = '量(ml)' style = {input_style.field} keyboardType = {'number-pad'} returnKeyLabel = '完了' returnKeyType = 'done'></TextInput>
         )
