@@ -9,6 +9,9 @@ npm-debug.*
 *.orig.*
 web-build/
 architecture.md
+ios/
+android/
 
 # macOS
 .DS_Store
+node_modules

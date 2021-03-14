@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef} from 'react'
 import { Text, View, StyleSheet, SafeAreaView,FlatList, ScrollView, TextInput, TouchableOpacity} from 'react-native'
 import Picker from 'react-native-dropdown-picker'
-import * as Font from 'expo-font'
+import * as Notifications from 'expo-notifications';
 import Icon from 'react-native-vector-icons/Feather';
 import firebase from '../firebase'
-import { set } from 'react-native-reanimated';
+import { divide, set } from 'react-native-reanimated';
+import { requestPermissionsAsync } from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
 
 const HomeScreen = ({ navigation }) => {
 
@@ -19,6 +28,17 @@ const HomeScreen = ({ navigation }) => {
             setData(doc.data())
         } )
     }, [])
+
+    useEffect(() => {
+        requestPermissionsAsync()
+    })
+
+    const requestPermissionsAsync = async () => {
+        const { granted } = await Notifications.getPermissionsAsync()
+        if (granted) {return}
+
+        await Notifications.requestPermissionsAsync()
+    }
 
     return(
         <SafeAreaView>
@@ -211,7 +231,7 @@ const Card = (props) => {
 
             <Input type = {action} theme = {color}/>
 
-            <ActionButton title = {title} theme = {color}/>
+            <ActionButton title = {display} theme = {color}/>
 
         </View>
     )
@@ -219,6 +239,20 @@ const Card = (props) => {
 
 const ActionButton = (props) => {
     let { title, theme } = props
+
+    const scheduleNotificationAsync = async () => {
+        Notifications.scheduleNotificationAsync({
+            content: {
+                body: '最終更新は1時間前です。',
+                title: `${title}の時間です。`,
+                sound: 'defaultCritical'
+            },
+            trigger: {
+                seconds: 1,
+            }
+        })
+    }
+
 
     const acttionButton_style  = StyleSheet.create({
         actionButton:{
@@ -236,7 +270,7 @@ const ActionButton = (props) => {
     })
 
     return (
-        <TouchableOpacity style = {acttionButton_style.actionButton}>
+        <TouchableOpacity style = {acttionButton_style.actionButton} onPress = {scheduleNotificationAsync}>
                 <Text style = {acttionButton_style.actionButton_text}>{title}</Text>
         </TouchableOpacity>
     )

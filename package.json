@@ -24,11 +24,13 @@
     "react-native-gesture-handler": "~1.8.0",
     "react-native-picker-module": "^2.0.4",
     "react-native-picker-select": "^8.0.4",
+    "react-native-push-notification": "^7.2.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-router-flux": "^4.2.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
-    "react-navigation-tabs": "^2.11.0"
+    "react-navigation-tabs": "^2.11.0",
+    "expo-notifications": "~0.8.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

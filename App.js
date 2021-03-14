@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Button, SafeAreaView, SafeAreaViewBase, Text } from 'react-native';
+import { Button, SafeAreaView, SafeAreaViewBase, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -15,6 +15,7 @@ import ChildScreen from './pages/ChildScreen'
 import LoadingScreen from './pages/LoadingScreen'
 import SettingsScreen from './pages/SettingsScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const Stack = createStackNavigator()
 
