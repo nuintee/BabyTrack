@@ -9,6 +9,9 @@ import { set } from 'react-native-reanimated';
 const HomeScreen = ({ navigation }) => {
 
     const [ data, setData ] = useState();
+    const [ isSelected, setIsSelected ] = useState(0)
+    const [ milkUpdated, setMilkUpdated ] = useState()
+    const [ diaperUpdated, setDiaperUpdated ] = useState()
 
     useEffect(() => {
         firebase.firestore().collection('User').doc(firebase.auth().currentUser.uid)
@@ -19,16 +22,15 @@ const HomeScreen = ({ navigation }) => {
 
     return(
         <SafeAreaView>
-            <Swiper data = {data}/>
-            <Card title = 'milk'/>
-            <Card title = 'diaper' />
+            <Swiper data = {data} setIsSelected = {setIsSelected} isSelected = {isSelected}/>
+            <Card title = 'milk' data = {data} index = {isSelected}/>
+            <Card title = 'diaper' data = {data} index = {isSelected}/>
         </SafeAreaView>
     )
 }
 
 const Swiper = (props) => {
-    let { data } = props
-    let [ isSelected, setIsSelected ] = useState(0)
+    let { data, isSelected, setIsSelected } = props
 
     const swiper_style = StyleSheet.create({
         swipe_item:{
@@ -67,14 +69,10 @@ const Swiper = (props) => {
         }
     })
 
-    const pressHandler = () => {
-        alert(index)
-    }
-
     const ItemRenderer = ({item}) => {
         return(
             Object.keys(item.children).map((key, index) => (
-                <TouchableOpacity style = {swiper_style.swipe_item} onPress = {() => setIsSelected(index)}>
+                <TouchableOpacity style = {swiper_style.swipe_item} onPress = {() => setIsSelected(index)} key = {key}>
                     <View style = { index  == isSelected ? swiper_style.text_container_active : swiper_style.text_container_default}>
                         <Text style = {index == isSelected ? swiper_style.text_active : swiper_style.text_default}>{item.children[key].name}</Text>
                     </View>
@@ -93,11 +91,25 @@ const Swiper = (props) => {
 }
 
 const Capsule = (props) => {
-    let [ timeNow, setTimeNow ] = useState(new Date());
+    let { data, index, title } = props
+    let [ timeNow, setTimeNow ] = useState(new Date().toString());
+    let [ targetDiaper, setTargetDiaper ] = useState();
+    let [ targetMilk, setTargetMilk ] = useState();
 
     useEffect(() => {
-        setInterval(() => { setTimeNow(new Date()) },1000)
-    }, [])
+        setInterval(() => { setTimeNow(new Date().toString()) },1000)
+    },[])
+
+    useEffect(() => {
+        if (!data){
+            setTargetDiaper('読み込み中です。')
+            setTargetMilk('読み込み中です。')
+        }
+        else {
+            setTargetDiaper(data.children['user_'+index].diaper.toDate().toString())
+            setTargetMilk(data.children['user_'+index].milk.toDate().toString())
+        }
+    })
 
     const capsule_style = StyleSheet.create({
         card_capsule:{
@@ -109,20 +121,20 @@ const Capsule = (props) => {
 
     return (
         <View style = {capsule_style.card_capsule}>
-            <Text style = {{color: '#FFF'}}>{timeNow.getSeconds().toString()}</Text>
+            {title == 'milk' ? (<Text style = {{color: '#FFF'}}>{targetMilk}</Text>) : (<Text style = {{color: '#FFF'}}>{targetDiaper}</Text>)}
         </View>
     )
 }
 
 const Card = (props) => {
-    let { title, color, action} = props
+    let { title, color, action, data, index, display} = props
 
     if (title == 'milk'){
-        title = 'ミルク'
+        display = 'ミルク'
         color = '#86E3CE'
         action = 'number'
     } else {
-        title = 'オムツ'
+        display = 'オムツ'
         color = '#CCABDA'
         action = 'select'
     }
@@ -161,9 +173,9 @@ const Card = (props) => {
 
             {/* Header Display */}
             <View style = {card_style.card_header}>
-                <Text>{title}</Text>
+                <Text>{display}</Text>
                 {/* Card_capsule */}
-                <Capsule />
+                <Capsule data = {data} index = {index} title = {title}/>
             </View>
 
             <Input type = {action} theme = {color}/>
