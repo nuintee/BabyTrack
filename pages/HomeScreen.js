@@ -106,8 +106,39 @@ const Capsule = (props) => {
             setTargetMilk('読み込み中です。')
         }
         else {
-            setTargetDiaper(data.children['user_'+index].diaper.toDate().toString())
-            setTargetMilk(data.children['user_'+index].milk.toDate().toString())
+
+            // Common
+            const targetRef = data.children['user_'+index]
+
+            // Diaper
+            const diaperRef = targetRef.diaper.toDate().toString()
+            let diaperOut = Math.floor( ( new Date(timeNow) - new Date(diaperRef) ) / 60 / 1000 )
+                // Time Separation
+                if (diaperOut >= 1440){
+                    diaperOut = '約' + Math.ceil(diaperOut / 60 / 24) + '日前'
+                }
+                else if (diaperOut < 1440 && diaperOut >= 60) {
+                    diaperOut = diaperOut / 60 + '時間前'
+                }
+                else if ( diaperOut < 60){
+                    diaperOut += '分前'
+                }
+            setTargetDiaper( diaperOut )
+
+            // Milk
+            const milkRef = targetRef.milk.toDate().toString()
+            let milkOut = Math.floor( ( new Date(timeNow) - new Date(milkRef) ) / 60 / 1000 )
+                // Time Separation
+                if (milkOut >= 1440){
+                    milkOut = '約'+ Math.ceil(milkOut / 60 / 24) + '日前'
+                }
+                else if (milkOut < 1440 && milkOut >= 60) {
+                    milkOut = milkOut / 60 + '時間前'
+                }
+                else if ( milkOut < 60){
+                    milkOut += '分前'
+                }
+            setTargetMilk(milkOut)
         }
     })
 
@@ -121,7 +152,7 @@ const Capsule = (props) => {
 
     return (
         <View style = {capsule_style.card_capsule}>
-            {title == 'milk' ? (<Text style = {{color: '#FFF'}}>{targetMilk}</Text>) : (<Text style = {{color: '#FFF'}}>{targetDiaper}</Text>)}
+            {title == 'milk' ? (<Text style = {{color: '#FFF'}}>{targetDiaper}</Text>) : (<Text style = {{color: '#FFF'}}>{targetMilk}</Text>)}
         </View>
     )
 }
