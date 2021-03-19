@@ -103,7 +103,7 @@ const Swiper = (props) => {
 
     return(
         data ? (
-        <FlatList data = {[data]} renderItem = {ItemRenderer} keyExtractor = {(item) => item.id} horizontal/>
+        <FlatList data = {[data]} renderItem = {ItemRenderer} keyExtractor = {(item) => item.id} horizontal />
         ) : (
         <Text>まだデータがありません</Text>
         )
@@ -240,18 +240,18 @@ const Card = (props) => {
 const ActionButton = (props) => {
     let { title, theme } = props
 
-    const scheduleNotificationAsync = async () => {
-        Notifications.scheduleNotificationAsync({
-            content: {
-                body: '最終更新は1時間前です。',
-                title: `${title}の時間です。`,
-                sound: 'defaultCritical'
-            },
-            trigger: {
-                seconds: 1,
-            }
-        })
-    }
+    // const scheduleNotificationAsync = async () => {
+    //     Notifications.scheduleNotificationAsync({
+    //         content: {
+    //             body: '最終更新は1時間前です。',
+    //             title: `${title}の時間です。`,
+    //             sound: 'defaultCritical'
+    //         },
+    //         trigger: {
+    //             seconds: 1,
+    //         }
+    //     })
+    // }
 
 
     const acttionButton_style  = StyleSheet.create({
@@ -270,7 +270,7 @@ const ActionButton = (props) => {
     })
 
     return (
-        <TouchableOpacity style = {acttionButton_style.actionButton} onPress = {scheduleNotificationAsync}>
+        <TouchableOpacity style = {acttionButton_style.actionButton}>
                 <Text style = {acttionButton_style.actionButton_text}>{title}</Text>
         </TouchableOpacity>
     )
@@ -298,7 +298,7 @@ const Input = (props) =>{
     return(
         type == 'select' ? 
         (
-            <Picker containerStyle = {input_style.field} items = {[{label: 'Sho', value: 'Sho', selected: true}]}/>
+            <Picker containerStyle = {input_style.field} items = {[{label: 'うんち', value: 'poo', selected: true},{label: 'おしっこ',value: 'pee'}]}/>
         ) : (
             <TextInput　placeholder = '量(ml)' style = {input_style.field} keyboardType = 'number-pad' returnKeyLabel = '完了' returnKeyType = 'done'></TextInput>
         )

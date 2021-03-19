@@ -4,11 +4,14 @@
     "slug": "BTracker",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/BabyTrackAppLogo@2x.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/BabyTrackAppLogo@2x.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,7 +20,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "io.expo.client"
     },
     "android": {
       "adaptiveIcon": {

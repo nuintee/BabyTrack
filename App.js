@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Button, SafeAreaView, SafeAreaViewBase, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 import firebase from './firebase'
 import HomeScreen from './pages/HomeScreen'
@@ -42,23 +44,34 @@ export default function App({navigation}){
               <Stack.Screen name = 'home' component = { HomeScreen } options = {(navigation) => ({
                 title: 'ホーム',
                 headerLeft: () => (
-                  <Button title = 'データ一覧'　onPress = {() => navigation.navigation.navigate('data')}/>
+                  <TouchableOpacity 　onPress = {() => navigation.navigation.navigate('data')}>
+                    <Icon name = 'bars' size = {20} color = '#BABABA'/>
+                  </TouchableOpacity>
                 ),
                 headerRight: () => (
-                  <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
+                  <TouchableOpacity 　onPress = {() => navigation.navigation.navigate('settings')}>
+                    <AntIcon name = 'setting' size = {25} color = '#BABABA' />
+                  </TouchableOpacity>
                 ),
+                headerTintColor: '#bababa',
                 headerLeftContainerStyle: {marginLeft: 20},
                 headerRightContainerStyle: {marginRight: 20}
               })} />
               <Stack.Screen name = 'data'  component = { DataListScreen }  options = {(navigation) => ({
                 title: 'データ一覧',
                 headerRight: () => (
-                  <Button title = '設定'　onPress = {() => navigation.navigation.navigate('settings')}/>
+                  <TouchableOpacity 　onPress = {() => navigation.navigation.navigate('settings')}>
+                    <AntIcon name = 'setting' size = {25} color = '#BABABA' />
+                  </TouchableOpacity>
                 ),
+                headerTintColor: '#bababa',
                 headerRightContainerStyle: {marginRight: 20}
               })}/>
               <Stack.Screen name = 'dataChild' component = { DataChildScreen } options = {{title: 'データ編集'}} />
-              <Stack.Screen name = 'settings' component = { SettingsScreen } options = {{title: '設定'}} />
+              <Stack.Screen name = 'settings' component = { SettingsScreen } options = {{
+                title: '設定',
+                headerTintColor: '#bababa',
+                }} />
             </>
         ) : (
           <>
