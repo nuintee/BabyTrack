@@ -11,6 +11,7 @@ web-build/
 architecture.md
 ios/*
 android/*
+./pages/HomeScreen copy.js
 
 # macOS
 .DS_Store

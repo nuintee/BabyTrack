@@ -41,22 +41,7 @@ export default function App({navigation}){
           <>
               <Stack.Screen name = 'user'  component = { UserScreen }  options = {{title: 'ユーザー名'}}/>
               <Stack.Screen name = 'child'  component = { ChildScreen }  options = {{title: '子供の名前'}}/>
-              <Stack.Screen name = 'home' component = { HomeScreen } options = {(navigation) => ({
-                title: 'ホーム',
-                headerLeft: () => (
-                  <TouchableOpacity 　onPress = {() => navigation.navigation.navigate('data')}>
-                    <Icon name = 'bars' size = {20} color = '#BABABA'/>
-                  </TouchableOpacity>
-                ),
-                headerRight: () => (
-                  <TouchableOpacity 　onPress = {() => navigation.navigation.navigate('settings')}>
-                    <AntIcon name = 'setting' size = {25} color = '#BABABA' />
-                  </TouchableOpacity>
-                ),
-                headerTintColor: '#bababa',
-                headerLeftContainerStyle: {marginLeft: 20},
-                headerRightContainerStyle: {marginRight: 20}
-              })} />
+              <Stack.Screen name = 'home' component = { HomeScreen } options = {(navigation) => ({ headerShown: false })} />
               <Stack.Screen name = 'data'  component = { DataListScreen }  options = {(navigation) => ({
                 title: 'データ一覧',
                 headerRight: () => (
